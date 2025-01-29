@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurisation Infrastructure - Jimmy Bettig</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff00;
+            --secondary: #1a1a1a;
+            --text: #ffffff;
+            --background: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            padding: 5px;
+        }
+
+        /* Contenu principal */
+        .project-detail {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        .project-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding: 20px;
+            background: var(--secondary);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px var(--primary);
+            }
+            to {
+                box-shadow: 0 0 20px var(--primary);
+            }
+        }
+
+        .project-header h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .project-metadata {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin: 40px 0;
+      padding: 0 20px;
+  }
+
+  .gallery-frame {
+      position: relative;
+      border-radius: 10px;
+      padding: 3px;
+      background: var(--secondary);
+      transition: transform 0.3s ease;
+  }
+
+  .frame-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+      animation: borderGlow 2s infinite;
+      pointer-events: none;
+  }
+
+  .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+  }
+
+  .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+  }
+
+  .gallery-frame:hover {
+      transform: scale(1.02);
+  }
+
+  .gallery-frame:hover .gallery-item img {
+      transform: scale(1.1);
+  }
+
+  @keyframes borderGlow {
+      0% {
+          box-shadow: 0 0 5px var(--primary);
+          border-color: var(--primary);
+      }
+      50% {
+          box-shadow: 0 0 20px var(--primary);
+          border-color: #00ff88;
+      }
+      100% {
+          box-shadow: 0 0 5px var(--primary);
+          border-color: var(--primary);
+      }
+  }
+
+  /* Ajoutez cette media query pour la version mobile */
+  @media (max-width: 768px) {
+      .project-gallery {
+          grid-template-columns: 1fr;
+      }
+  }
+
+        .project-content {
+            padding: 40px 20px;
+            background: var(--secondary);
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .project-content h2 {
+            color: var(--primary);
+            margin: 30px 0 20px;
+            font-size: 1.8em;
+        }
+
+        .project-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .project-content p {
+            margin-bottom: 20px;
+        }
+
+        .project-content ul {
+            list-style-type: none;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .project-content li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .project-content li::before {
+            content: '>';
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            font-size: 0.9em;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: var(--background);
+            padding: 15px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 2em;
+            }
+
+            .project-metadata {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .project-content {
+                padding: 20px;
+            }
+        }
+        .gallery-item-description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    border-top: 2px solid var(--primary);
+}
+
+.gallery-item:hover .gallery-item-description {
+    transform: translateY(0);
+}
+
+.gallery-item-description h3 {
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-size: 1.2em;
+}
+
+.gallery-item-description p {
+    color: var(--text);
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Ajoutez cet effet de fondu pour le texte */
+.gallery-item-description h3,
+.gallery-item-description p {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: 0.1s;
+}
+
+.gallery-item:hover .gallery-item-description h3,
+.gallery-item:hover .gallery-item-description p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-item:hover .gallery-item-description h3 {
+    transition-delay: 0.2s;
+}
+
+.gallery-item:hover .gallery-item-description p {
+    transition-delay: 0.3s;
+}
+    </style>
+</head>
+<body>
+    <main class="project-detail">
+        <div class="project-header">
+            <h1>Sécuriser un système d'informations</h1>
+            <div class="project-metadata">
+                <div class="metadata-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>2024</span>
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-clock"></i>
+                    <span>2 semaines</span>
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-users"></i>
+                    <span>Projet en Groupe</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-gallery">
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\robotarduino.png" alt="Vue d'ensemble infrastructure">
+            <div class="gallery-item-description">
+                <h3>Le Robot</h3>
+                <p>Robot arduino équipé d'un capteur ultrason et d'un moteur, ainsi qu'un micro-controlleur afin de téléverser le code.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\ordiarduino.png" alt="Configuration système">
+            <div class="gallery-item-description">
+                <h3>Configuration & Environnement de travail</h3>
+                <p>Ecriture du code et téléversement via terminal de l'université.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\ultrason.png" alt="Analyse sécurité">
+            <div class="gallery-item-description">
+                <h3>Classe Ultrason</h3>
+                <p>Partie du code qui gère la détection d'obstacle grâce au capteur.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\Engine.png  " alt="Résultats">
+            <div class="gallery-item-description">
+                <h3>Classe Engine</h3>
+                <p>Code pour gérer le moteur selon les informations reçues par le capteur.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="project-content">
+            <h2>Description du projet</h2>
+            <p>Ce projet vise à mettre en place une infrastructure réseau sécurisée complète intégrant des pare-feux Stormshield, des serveurs web et FTP, ainsi qu'une architecture d'authentification et de communication sécurisée entre différents sites. Le projet met l'accent sur la sécurisation des communications et l'implémentation de multiples mécanismes de protection contre les cyberattaques.</p>
+
+            <h2>Objectifs</h2>
+            <ul>
+                <li>Déployer une infrastructure réseau sécurisée avec zones démilitarisées (DMZ) pour héberger les services accessibles depuis l'extérieur</li>
+                <li>Mettre en place des mécanismes d'authentification robustes et transparents via certificats SSL et Single Sign-On</li>
+                <li>Sécuriser les communications inter-sites via VPN IPSEC et SSL pour garantir la confidentialité des échanges</li>
+                <li>Implémenter des systèmes de détection d'intrusion et de supervision pour assurer la sécurité continue de l'infrastructure</li>
+            </ul>
+
+            <h2>Technologies utilisées</h2>
+            <div class="tech-stack">
+                <span class="tech-item">Stormshield SAS</span>
+                <span class="tech-item">VSFTPD</span>
+                <span class="tech-item">Active Directory</span>
+                <span class="tech-item">OpenVPN</span>
+                <span class="tech-item">OpenVAS</span>
+                <span class="tech-item">Nagios</span>
+                <span class="tech-item">OpenSSL</span>
+            </div>
+
+            <h2>Méthodologie</h2>
+            <p>Le projet a été réalisé sur une période de trois semaines selon une approche progressive et méthodique. La première phase consistait à mettre en place l'infrastructure de base et les services essentiels. La deuxième phase s'est concentrée sur l'implémentation des mécanismes de sécurité et d'authentification. La dernière phase a permis de déployer les outils de supervision et de détection d'intrusion, ainsi que de réaliser des tests d'attaques contrôlées pour valider la robustesse de l'infrastructure. Un rapport détaillé documentant chaque étape a été maintenu tout au long du projet.</p>
+
+            <h2>Résultats</h2>
+            <p>L'implémentation de l'infrastructure sécurisée a été réalisée avec succès, permettant d'atteindre les objectifs fixés en termes de sécurité et de fonctionnalité. La mise en place des pare-feux Stormshield et la configuration des DMZ ont assuré une séparation efficace des réseaux, tandis que l'authentification transparente par certificats SSL a simplifié l'expérience utilisateur tout en maintenant un niveau de sécurité élevé. Les tests de pénétration effectués ont démontré la résistance de l'infrastructure aux attaques Man-in-the-Middle grâce aux contre-mesures déployées, notamment la sécurisation des protocoles ARP. La mise en place des tunnels VPN inter-sites a permis d'établir des communications chiffrées fiables entre les différentes zones du réseau. Enfin, les outils de supervision implémentés offrent une visibilité complète sur l'état du système et permettent une détection rapide des anomalies.</a></p>
+        </div>
+
+        <a href="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\portfolio-site (3).html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Retour aux projets
+        </a>
+    </main>
+</body>
+</html>

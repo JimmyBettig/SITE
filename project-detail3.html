@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurisation Infrastructure - Jimmy Bettig</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff00;
+            --secondary: #1a1a1a;
+            --text: #ffffff;
+            --background: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            padding: 5px;
+        }
+
+        /* Contenu principal */
+        .project-detail {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        .project-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding: 20px;
+            background: var(--secondary);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px var(--primary);
+            }
+            to {
+                box-shadow: 0 0 20px var(--primary);
+            }
+        }
+
+        .project-header h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .project-metadata {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin: 40px 0;
+      padding: 0 20px;
+  }
+
+  .gallery-frame {
+      position: relative;
+      border-radius: 10px;
+      padding: 3px;
+      background: var(--secondary);
+      transition: transform 0.3s ease;
+  }
+
+  .frame-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+      animation: borderGlow 2s infinite;
+      pointer-events: none;
+  }
+
+  .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+  }
+
+  .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+  }
+
+  .gallery-frame:hover {
+      transform: scale(1.02);
+  }
+
+  .gallery-frame:hover .gallery-item img {
+      transform: scale(1.1);
+  }
+
+  @keyframes borderGlow {
+      0% {
+          box-shadow: 0 0 5px var(--primary);
+          border-color: var(--primary);
+      }
+      50% {
+          box-shadow: 0 0 20px var(--primary);
+          border-color: #00ff88;
+      }
+      100% {
+          box-shadow: 0 0 5px var(--primary);
+          border-color: var(--primary);
+      }
+  }
+
+  /* Ajoutez cette media query pour la version mobile */
+  @media (max-width: 768px) {
+      .project-gallery {
+          grid-template-columns: 1fr;
+      }
+  }
+
+        .project-content {
+            padding: 40px 20px;
+            background: var(--secondary);
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .project-content h2 {
+            color: var(--primary);
+            margin: 30px 0 20px;
+            font-size: 1.8em;
+        }
+
+        .project-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .project-content p {
+            margin-bottom: 20px;
+        }
+
+        .project-content ul {
+            list-style-type: none;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .project-content li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .project-content li::before {
+            content: '>';
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            font-size: 0.9em;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: var(--background);
+            padding: 15px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 2em;
+            }
+
+            .project-metadata {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .project-content {
+                padding: 20px;
+            }
+        }
+        .gallery-item-description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    border-top: 2px solid var(--primary);
+}
+
+.gallery-item:hover .gallery-item-description {
+    transform: translateY(0);
+}
+
+.gallery-item-description h3 {
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-size: 1.2em;
+}
+
+.gallery-item-description p {
+    color: var(--text);
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Ajoutez cet effet de fondu pour le texte */
+.gallery-item-description h3,
+.gallery-item-description p {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: 0.1s;
+}
+
+.gallery-item:hover .gallery-item-description h3,
+.gallery-item:hover .gallery-item-description p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-item:hover .gallery-item-description h3 {
+    transition-delay: 0.2s;
+}
+
+.gallery-item:hover .gallery-item-description p {
+    transition-delay: 0.3s;
+}
+    </style>
+</head>
+<body>
+    <main class="project-detail">
+        <div class="project-header">
+            <h1>Concevoir un Réseau Multi-Sites</h1>
+            <div class="project-metadata">
+                <div class="metadata-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>2023</span>
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-clock"></i>
+                    <span>1 semaine</span>
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-users"></i>
+                    <span>Projet en Groupe</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-gallery">
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\robotarduino.png" alt="Vue d'ensemble infrastructure">
+            <div class="gallery-item-description">
+                <h3>Le Robot</h3>
+                <p>Robot arduino équipé d'un capteur ultrason et d'un moteur, ainsi qu'un micro-controlleur afin de téléverser le code.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\ordiarduino.png" alt="Configuration système">
+            <div class="gallery-item-description">
+                <h3>Configuration & Environnement de travail</h3>
+                <p>Ecriture du code et téléversement via terminal de l'université.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\ultrason.png" alt="Analyse sécurité">
+            <div class="gallery-item-description">
+                <h3>Classe Ultrason</h3>
+                <p>Partie du code qui gère la détection d'obstacle grâce au capteur.</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-frame">
+        <div class="frame-border"></div>
+        <div class="gallery-item">
+            <img src="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\images\Engine.png  " alt="Résultats">
+            <div class="gallery-item-description">
+                <h3>Classe Engine</h3>
+                <p>Code pour gérer le moteur selon les informations reçues par le capteur.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="project-content">
+            <h2>Description du projet</h2>
+            <p>Le projet SAE303 consistait à moderniser l'infrastructure informatique de l'entreprise Beerok (fictive), une société spécialisée dans les chaussures de sport comptant 48 magasins en France, ainsi qu'un showroom et un siège à Maux. L'objectif était de créer une infrastructure réseau robuste et sécurisée permettant de connecter et gérer efficacement l'ensemble des sites.</p>
+
+            <h2>Objectifs</h2>
+            <ul>
+                <li>Mettre en place une architecture réseau évolutive et sécurisée reliant les 50 sites de l'entreprise</li>
+                <li>Déployer des services centralisés (Active Directory, DNS, DHCP) pour faciliter la gestion des utilisateurs et des ressources</li>
+                <li>Implémenter des solutions de sécurité robustes avec authentification et contrôle d'accès</li>
+                <li>Assurer la disponibilité et la redondance des services critiques de l'entreprise</li>
+            </ul>
+
+            <h2>Technologies utilisées</h2>
+            <div class="tech-stack">
+                <span class="tech-item">Windows Server</span>
+                <span class="tech-item">PFSense</span>
+                <span class="tech-item">RADIUS</span>
+                <span class="tech-item">GNS3</span>
+                <span class="tech-item">OSPF BGP</span>
+            </div>
+
+            <h2>Méthodologie</h2>
+            <p>La méthodologie adoptée pour ce projet s'est appuyée sur une approche itérative et collaborative. L'équipe a d'abord procédé à une phase de conception approfondie de l'architecture réseau globale, permettant d'établir les fondations solides du projet. Cette première étape a été suivie par le déploiement progressif de l'infrastructure de base, comprenant la configuration du routage et du switching, avant d'enchaîner avec l'implémentation des services centraux comme l'Active Directory, le DNS et le DHCP. La mise en place des solutions de sécurité est venue consolider l'ensemble de l'infrastructure. Chaque étape a fait l'objet de tests rigoureux et d'une validation minutieuse avant de passer à la suivante, garantissant ainsi la stabilité et la fiabilité du système. Le projet s'est conclu par une phase de documentation détaillée et de transfert de compétences, assurant la pérennité de la solution mise en place.</p>
+
+            <h2>Résultats</h2>
+            <p>Les résultats obtenus lors de ce projet ont permis de valider le bon fonctionnement de notre infrastructure réseau. La connectivité entre les différents VLANs a été testée avec succès via des pings entre les machines des différents services. Le portail captif PfSense a correctement authentifié les utilisateurs du domaine via RADIUS, offrant un accès sécurisé au réseau WiFi. L'intégration de Nextcloud avec l'Active Directory fonctionne comme prévu, permettant aux utilisateurs de se connecter avec leurs identifiants du domaine. Les tests de routage OSPF entre les routeurs ont confirmé la redondance des chemins en cas de panne d'un lien. Bien que certains défis aient été rencontrés lors de la configuration des certificats et de l'intégration LDAP, l'ensemble des services déployés répond aux exigences initiales du cahier des charges. Le système est désormais opérationnel et permet une gestion centralisée des ressources réseau pour l'ensemble des sites de l'entreprise.</p>
+        </div>
+
+        <a href="C:\Users\Jimmy\OneDrive\Documents\doc jimmy\SiteGithub\portfolio-site (3).html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Retour aux projets
+        </a>
+    </main>
+</body>
+</html>
